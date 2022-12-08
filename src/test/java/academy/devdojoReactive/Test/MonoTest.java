@@ -1,9 +1,15 @@
 package academy.devdojoReactive.Test;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
+import reactor.blockhound.BlockHound;
+import reactor.blockhound.BlockingOperationError;
+import reactor.core.scheduler.Schedulers;
+
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -16,6 +22,9 @@ import reactor.test.StepVerifier;
  */
  @Slf4j
 public class MonoTest {
+
+
+
 //    @Test
 //    public void monoSubscriber(){
 //        String name = "Nayeem Ahmed";
@@ -127,7 +136,7 @@ public class MonoTest {
 //        log.info("Everything working as Intended");
 //    }
 
-@Test
+/*@Test
     public void monoDoOnError(){
     String name =  "Nayeem Ahmed";
     Mono<Object> error =     Mono.error(new IllegalArgumentException("Illegal Argument exception"))
@@ -139,9 +148,9 @@ public class MonoTest {
      StepVerifier.create(error).expectError(IllegalArgumentException.class)
             .verify();
 
-    }
+    }*/
 
-    @Test
+/*    @Test
         public void monoOnErrorResume(){
         String name =  "Nayeem Ahmed";
         Mono<Object> error =     Mono.error(new IllegalArgumentException("Illegal Argument exception"))
@@ -158,7 +167,50 @@ public class MonoTest {
                 .expectNext("Empty").verifyComplete();
 
 
+    }*/
+
+    @BeforeAll
+    public static void setUp(){
+        BlockHound.install();
     }
+
+    @Test
+    public void blockHoundWorks(){
+        try {
+            FutureTask<?> task =  new FutureTask<>(() -> {
+                Thread.sleep(0);
+                return "";
+            });
+
+            Schedulers.parallel().schedule(task);
+            task.get(10, TimeUnit.SECONDS);
+            Assertions.fail("Should Fail");
+
+        } catch (Exception e) {
+           Assertions.assertTrue(e.getCause() instanceof BlockingOperationError);
+        }
+    }
+
+
+
+/*
+    public void monoSubscriber(){
+        String name = "Nayeem Ahmed";
+        Mono<String> mono = Mono.just(name)
+                .log();
+
+        mono.subscribe();
+        log.info("-------------------");
+        StepVerifier.create(mono)
+                .expectNext(name)
+                .verifyComplete();
+
+
+    }
+*/
+
+
+
 
 }
 

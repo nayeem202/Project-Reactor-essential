@@ -1,17 +1,27 @@
 package academy.devdojoReactive.Test;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
 @Slf4j
 public class FluxTest {
-////    @Test
-////    public void fluxSubscriber(){
-////        Flux<String> fluxString = Flux.just("Nayeem", "Mehedi", "Khalilullah").log();
-////        StepVerifier.create(fluxString).expectNext("Nayeem", "Mehedi", "Khalilullah")
-////                .verifyComplete();
-////
-////    }
-////
+//    @BeforeAll
+//    public static void setUp(){
+//        BlockHound.install();
+//    }
+
+
+
+    @Test
+    public void fluxSubscriber(){
+        Flux<String> fluxString = Flux.just("Nayeem", "Mehedi", "Khalilullah").log();
+        StepVerifier.create(fluxString).expectNext("Nayeem", "Mehedi", "Khalilullah")
+                .verifyComplete();
+
+    }
+
 //@Test
 //public void fluxSubscriberNumbers(){
 //    Flux<Integer> flux = Flux.range(1, 5)
